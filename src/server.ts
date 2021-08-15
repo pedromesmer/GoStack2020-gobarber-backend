@@ -4,11 +4,11 @@ import express, { Request, Response, NextFunction } from 'express'
 import cors from 'cors'
 import 'express-async-errors'
 
-import routes from './routes'
+import routes from './shared/routes'
 import uploadConfig from './config/upload'
-import AppError from './errors/AppError'
+import AppError from './shared/errors/AppError'
 
-import './database'
+import './shared/database'
 
 const app = express()
 const port = 3333
@@ -35,7 +35,7 @@ app.use((err:Error, request: Request, response: Response, next: NextFunction) =>
 })
 
 app.get('/', (request, response) => {
-    
+
     return response.json({
         message: 'Hello World'
     })

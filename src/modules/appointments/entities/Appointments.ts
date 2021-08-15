@@ -1,5 +1,5 @@
 import {Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn} from 'typeorm'
-import User from './User'
+import User from '../../users/entities/User'
 
 @Entity('appointments')
 class Appointment {
@@ -21,7 +21,7 @@ class Appointment {
 
     @UpdateDateColumn()
     updated_at: Date
-    
+
 }
 
 export default Appointment

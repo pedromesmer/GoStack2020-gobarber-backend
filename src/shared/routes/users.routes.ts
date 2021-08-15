@@ -1,9 +1,9 @@
 import { request, response, Router} from 'express'
 import multer from 'multer'
-import uploadConfig from '../config/upload'
+import uploadConfig from '../../config/upload'
 
-import CreateUserService from '../services/CreateUserService'
-import UpdateUSerAvatarService from '../services/UpdateUserAvatarService'
+import CreateUserService from '../../modules/users/services/CreateUserService'
+import UpdateUSerAvatarService from '../../modules/users/services/UpdateUserAvatarService'
 
 import ensureAuthenticated from '../middlewares/ensureAuthenticated'
 
@@ -22,7 +22,7 @@ usersRouter.post('/', async (request, response) => {
             password
         })
 
-        // @ts-expect-error
+
         delete user.password
 
         return response.json(user)
@@ -34,8 +34,8 @@ usersRouter.post('/', async (request, response) => {
 })
 
 usersRouter.patch('/avatar',ensureAuthenticated, upload.single('avatar'), async (request, response) => {
-    
-    
+
+
     const updateUserAvatar =  new UpdateUSerAvatarService()
 
     const user = await updateUserAvatar.execute ({
@@ -43,12 +43,11 @@ usersRouter.patch('/avatar',ensureAuthenticated, upload.single('avatar'), async 
         avatarFilename: request.file.filename
     })
 
-    // @ts-expect-error
     delete user.password
 
     return response.json(user)
 
-    
+
 })
 
 export default usersRouter

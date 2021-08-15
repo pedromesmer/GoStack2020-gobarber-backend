@@ -2,16 +2,16 @@ import { getRepository } from 'typeorm'
 import { compare, hash } from 'bcryptjs'
 import { sign } from 'jsonwebtoken'
 
-import AppError from '../errors/AppError'
-import User from '../models/User'
+import AppError from '../../../shared/errors/AppError'
+import User from '../entities/User'
 
-import authConfig from '../config/auth'
+import authConfig from '../../../config/auth'
 
 interface Request {
     email: string
     password: string
 }
-interface Response { 
+interface Response {
     user: User,
     token: string
 }

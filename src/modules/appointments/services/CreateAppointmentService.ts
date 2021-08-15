@@ -1,9 +1,9 @@
-import Appointment from '../models/Appointments'
+import Appointment from '../../appointments/entities/Appointments'
 import { startOfHour } from 'date-fns'
 import { getCustomRepository } from 'typeorm'
 
 import AppointmentsReository from '../repositories/AppointmentsRepository'
-import AppError from '../errors/AppError'
+import AppError from '../../../shared/errors/AppError'
 
 interface RequestDTO {
     provider_id: string,
@@ -11,7 +11,7 @@ interface RequestDTO {
 }
 
 class CreateAppointmentService {
-   
+
 
     public async execute({provider_id, date}: RequestDTO): Promise<Appointment> {
 

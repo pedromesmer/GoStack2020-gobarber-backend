@@ -27,7 +27,7 @@ appointmensRouter.get('/', async (request, response) => {
 })
 
 appointmensRouter.post('/', async (request, response) => {
-    
+
     const {provider_id, date} = request.body
 
     const parsedDate = parseISO(date)
@@ -35,12 +35,12 @@ appointmensRouter.post('/', async (request, response) => {
     const createAppointment = new CreateAppointmentService()
 
     const appointment = await createAppointment.execute({
-        provider_id, 
+        provider_id,
         date: parsedDate
     })
 
     return response.json(appointment)
-   
+
 })
 
 export default appointmensRouter

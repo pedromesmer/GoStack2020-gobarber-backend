@@ -4,13 +4,13 @@ import { Router} from 'express'
 import { parseISO } from 'date-fns'
 import { getCustomRepository } from 'typeorm'
 
-import CreateAppointmentService from   '../modules/appointments/services/CreateAppointmentService'
-import AppointmentsRepository from '../modules/appointments/repositories/AppointmentsRepository'
+import CreateAppointmentService from   '../../../../modules/appointments/services/CreateAppointmentService'
+import AppointmentsRepository from '../../../../modules/appointments/repositories/AppointmentsRepository'
 
 // parseISO converterá o formato ISO para Date() do js
 // startOfHour colocará no início daquala hora, além dos minutos e segundos
 
-import ensureAuthenticated from '../shared/middlewares/ensureAuthenticated'
+import ensureAuthenticated from '../middlewares/ensureAuthenticated'
 
 const appointmensRouter = Router()
 

@@ -5,8 +5,8 @@ import cors from 'cors'
 import 'express-async-errors'
 
 import routes from './routes'
-import uploadConfig from '../../../config/upload'
-import AppError from '../../errors/AppError'
+import uploadConfig from '@config/upload'
+import AppError from '@shared/errors/AppError'
 
 import '../typeorm'
 
@@ -42,5 +42,5 @@ app.get('/', (request, response) => {
 })
 
 app.listen(port, () => {
-    console.log(`Backend online on port ${port}`)
+    console.log(`🚀 Server online`)
 })

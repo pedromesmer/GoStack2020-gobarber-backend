@@ -8,7 +8,8 @@ import uploadConfig from '@config/upload';
 import AppError from '@shared/errors/AppError';
 import routes from './routes';
 
-import '../typeorm';
+import '@shared/infra/typeorm';
+import '@shared/container';
 
 const app = express();
 const port = 3333;
@@ -43,5 +44,5 @@ app.get('/', (request, response) => {
 });
 
 app.listen(port, () => {
-  console.log(`🚀 Server online`);
+  console.log(`🚀 Server online on port ${port}`);
 });

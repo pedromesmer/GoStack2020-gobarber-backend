@@ -5,7 +5,7 @@ import User from '@modules/users/infra/typeorm/entities/User';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
 
-class UsersReository implements IUsersRepository {
+class UsersRepository implements IUsersRepository {
   private ormRepository: Repository<User>;
 
   constructor() {
@@ -41,4 +41,4 @@ class UsersReository implements IUsersRepository {
   }
 }
 
-export default UsersReository;
+export default UsersRepository;

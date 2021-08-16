@@ -1,3 +1,4 @@
+import { injectable, inject } from 'tsyringe';
 import User from '@modules/users/infra/typeorm/entities/User';
 import path from 'path';
 
@@ -6,7 +7,6 @@ import AppError from '@shared/errors/AppError';
 import uploadConfig from '@config/upload';
 import fs from 'fs';
 
-import { id } from 'date-fns/locale';
 import IUsersRepository from '../repositories/IUsersRepository';
 
 interface Request {
@@ -14,8 +14,12 @@ interface Request {
   avatarFilename: string;
 }
 
+@injectable()
 class UpdateUserAvatarService {
-  constructor(private usersRepository: IUsersRepository) {}
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) {}
 
   public async execute({ user_id, avatarFilename }: Request): Promise<User> {
     const user = await this.usersRepository.findByID(user_id);

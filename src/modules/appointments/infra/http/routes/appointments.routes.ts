@@ -1,18 +1,10 @@
-// Rotas: Receber a requisição, chamar outro arquivo, devolver uma resposta
-
 import { Router } from 'express';
-import { parseISO } from 'date-fns';
-
-import CreateAppointmentService from '@modules/appointments/services/CreateAppointmentService';
-
-// parseISO converterá o formato ISO para Date() do js
-// startOfHour colocará no início daquala hora, além dos minutos e segundos
-
 import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated';
-import { container } from 'tsyringe';
+import AppointmentsController from '../controllers/AppointmentsController';
+
+const appointmentController = new AppointmentsController();
 
 const appointmensRouter = Router();
-// const appointmentsRepository = new AppointmentsRepository();
 
 // SoC - Separation of Concerns ( Separação de proecupações )
 // DTO - Data Transfer Object
@@ -25,19 +17,6 @@ appointmensRouter.use(ensureAuthenticated);
 //   return response.json(appointments);
 // });
 
-appointmensRouter.post('/', async (request, response) => {
-  const { provider_id, date } = request.body;
-
-  const parsedDate = parseISO(date);
-
-  const createAppointment = container.resolve(CreateAppointmentService);
-
-  const appointment = await createAppointment.execute({
-    provider_id,
-    date: parsedDate,
-  });
-
-  return response.json(appointment);
-});
+appointmensRouter.post('/', appointmentController.create);
 
 export default appointmensRouter;

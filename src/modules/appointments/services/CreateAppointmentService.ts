@@ -1,39 +1,34 @@
-import Appointment from '@modules/appointments/infra/typeorm/entities/Appointments'
-import { startOfHour } from 'date-fns'
-import { getCustomRepository } from 'typeorm'
+import Appointment from '@modules/appointments/infra/typeorm/entities/Appointments';
+import { startOfHour } from 'date-fns';
 
-import AppointmentsReository from '@modules/appointments/repositories/AppointmentsRepository'
-import AppError from '@shared/errors/AppError'
+import AppError from '@shared/errors/AppError';
+import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 
-interface RequestDTO {
-    provider_id: string,
-    date: Date
+interface IRequest {
+  provider_id: string;
+  date: Date;
 }
 
 class CreateAppointmentService {
+  constructor(private appointmentsRepository: IAppointmentsRepository) {}
 
+  public async execute({ provider_id, date }: IRequest): Promise<Appointment> {
+    const appointmentDate = startOfHour(date);
 
-    public async execute({provider_id, date}: RequestDTO): Promise<Appointment> {
+    const findAppointmentInSameDate =
+      await this.appointmentsRepository.findByDate(appointmentDate);
 
-        const appointmentsRepository = getCustomRepository(AppointmentsReository)
-
-        const appointmentDate = startOfHour(date)
-
-        const findAppointmentInSameDate = await appointmentsRepository.findByDate(appointmentDate)
-
-        if (findAppointmentInSameDate){
-            throw new AppError("This appointment is already booked")
-        }
-
-        const appointment = appointmentsRepository.create({
-            provider_id,
-            date: appointmentDate
-        })
-
-        await appointmentsRepository.save(appointment)
-
-        return appointment
+    if (findAppointmentInSameDate) {
+      throw new AppError('This appointment is already booked');
     }
+
+    const appointment = await this.appointmentsRepository.create({
+      provider_id,
+      date: appointmentDate,
+    });
+
+    return appointment;
+  }
 }
 
-export default CreateAppointmentService
+export default CreateAppointmentService;

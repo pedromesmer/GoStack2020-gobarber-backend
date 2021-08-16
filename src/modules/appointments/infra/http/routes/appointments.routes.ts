@@ -12,7 +12,7 @@ import AppointmentsRepository from '@modules/appointments/infra/typeorm/reposito
 import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated';
 
 const appointmensRouter = Router();
-const appointmentsRepository = new AppointmentsRepository();
+// const appointmentsRepository = new AppointmentsRepository();
 
 // SoC - Separation of Concerns ( Separação de proecupações )
 // DTO - Data Transfer Object
@@ -29,7 +29,7 @@ appointmensRouter.post('/', async (request, response) => {
   const { provider_id, date } = request.body;
 
   const parsedDate = parseISO(date);
-
+  const appointmentsRepository = new AppointmentsRepository();
   const createAppointment = new CreateAppointmentService(
     appointmentsRepository,
   );

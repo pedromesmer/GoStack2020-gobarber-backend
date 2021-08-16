@@ -1,53 +1,58 @@
-import { request, response, Router} from 'express'
-import multer from 'multer'
-import uploadConfig from '@config/upload'
+import { Router } from 'express';
+import multer from 'multer';
+import uploadConfig from '@config/upload';
 
-import CreateUserService from '@modules/users/services/CreateUserService'
-import UpdateUSerAvatarService from '@modules/users/services/UpdateUserAvatarService'
+import CreateUserService from '@modules/users/services/CreateUserService';
+import UpdateUSerAvatarService from '@modules/users/services/UpdateUserAvatarService';
 
-import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated'
+import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated';
+import UsersReository from '@modules/users/infra/typeorm/repositories/UsersRepository';
 
-const usersRouter = Router()
+const usersRouter = Router();
 
-const upload = multer(uploadConfig)
+// const usersRepository = new UsersReository();
+
+const upload = multer(uploadConfig);
 
 usersRouter.post('/', async (request, response) => {
-    try {
-        const { name, email, password } = request.body
-        const createUser = new CreateUserService()
+  try {
+    const { name, email, password } = request.body;
+    const usersRepository = new UsersReository();
+    const createUser = new CreateUserService(usersRepository);
 
-        const user = await createUser.execute({
-            name,
-            email,
-            password
-        })
+    const user = await createUser.execute({
+      name,
+      email,
+      password,
+    });
 
-         // @ts-expect-error
-        delete user.password;
+    delete user.password;
 
-        return response.json(user)
-    } catch (error) {
-        return response.status(400).json({
-            error: error.message
-        })
-    }
-})
+    return response.json(user);
+  } catch (error) {
+    return response.status(400).json({
+      error: error.message,
+    });
+  }
+});
 
-usersRouter.patch('/avatar',ensureAuthenticated, upload.single('avatar'), async (request, response) => {
+usersRouter.patch(
+  '/avatar',
+  ensureAuthenticated,
+  upload.single('avatar'),
+  async (request, response) => {
+    const usersRepository = new UsersReository();
+    const updateUserAvatar = new UpdateUSerAvatarService(usersRepository);
 
+    const user = await updateUserAvatar.execute({
+      user_id: request.user.id,
+      avatarFilename: request.file.filename,
+    });
 
-    const updateUserAvatar =  new UpdateUSerAvatarService()
+    delete user.password;
 
-    const user = await updateUserAvatar.execute ({
-        user_id: request.user.id,
-        avatarFilename: request.file.filename
-    })
-     // @ts-expect-error
-    delete user.password
+    return response.json(user);
+  },
+);
 
-    return response.json(user)
-
-
-})
-
-export default usersRouter
+export default usersRouter;

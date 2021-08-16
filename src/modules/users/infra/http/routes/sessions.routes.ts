@@ -1,24 +1,25 @@
-import { Router} from 'express'
+import { Router } from 'express';
 
-import AutenticateUserService from '@modules/users/services/AuthenticateUserService'
+import AutenticateUserService from '@modules/users/services/AuthenticateUserService';
+import UsersReository from '@modules/users/infra/typeorm/repositories/UsersRepository';
 
-const sessionsRouter = Router()
+const sessionsRouter = Router();
+
+// const usersRepository = new UsersReository();
 
 sessionsRouter.post('/', async (request, response) => {
+  const { email, password } = request.body;
 
-    const { email, password } = request.body
+  const usersRepository = new UsersReository();
+  const authenticateUser = new AutenticateUserService(usersRepository);
 
-    const authenticateUser = new AutenticateUserService()
+  const { user, token } = await authenticateUser.execute({
+    email,
+    password,
+  });
+  delete user.password;
 
-    const { user, token } = await authenticateUser.execute({
-        email,
-        password
-    })
-    // @ts-expect-error
-    delete user.password
+  return response.json({ user, token });
+});
 
-    return response.json({ user, token })
-
-})
-
-export default sessionsRouter
+export default sessionsRouter;
